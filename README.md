@@ -24,5 +24,7 @@ Example
 	</script>
 </html>
 ```
+Full view
 ![example 1](/imgs/example_1.png)
+Collapsed view
 ![example 2](/imgs/example_2.png)
