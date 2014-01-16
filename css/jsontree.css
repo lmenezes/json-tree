@@ -1,3 +1,11 @@
+/* json string right " */
+.json-object-expand:after {
+	content: '+';
+}
+.json-object-collapse:after {
+	content: '-';
+}
+
 /* properties for expand icon */
 .json-object-expand {
 	display: inline-block;
@@ -34,14 +42,6 @@
 /* json string style */
 .json-string {
 	color: #2DB669;
-}
-/* json string right " */
-.json-string:after {
-	content: "\"";
-}
-/* json string left " */
-.json-string:before {
-	content: "\"";
 }
 /* json boolean style */
 .json-boolean {
