@@ -1,11 +1,24 @@
-// JSONTree 0.1.2
-function JSONTree(collapse_icon,expand_icon) {
-		
-	var id = 0;
-	var collapse_icon = collapse_icon != null ? collapse_icon : span('',{'class' : 'json-object-collapse'});
-	var expand_icon = expand_icon != null ? expand_icon : span('',{'class' : 'json-object-expand'});
+// JSONTree 0.1.3
+function JSONTree() {
 	
-	function html(type, text, attrs) {
+}
+
+JSONTree.id=0;
+
+JSONTree.create=function(data) {
+	JSONTree.id = 0;
+	return JSONTree.div(JSONTree.jsValue(data), {'class': 'json-content'});
+}
+
+JSONTree.div=function(text, attrs) {
+	return JSONTree.html('div', text, attrs);
+}
+
+JSONTree.span=function(text, attrs) {
+	return JSONTree.html('span', text, attrs);
+}
+
+JSONTree.html=function(type, text, attrs) {
 		var html = '<' + type;
 		if (attrs != null) {
 			Object.keys(attrs).forEach(function(attr) {
@@ -15,96 +28,89 @@ function JSONTree(collapse_icon,expand_icon) {
 		html += '>' + text + '</' + type + '>';
 		return html;
 	}
-	
-	function div(text, attrs) {
-		return html('div', text, attrs);
-	}
+/* icon for collapsing/expanding a json object/array */
+JSONTree.collapseIcon=function(id) {
+	var attrs = {'onclick': "JSONTree.toggleVisible('collapse_json" + id + "')" };
+	return JSONTree.span(JSONTree.collapse_icon, attrs);
+}
 
-	function span(text, attrs) {
-		return html('span', text, attrs);
+/* a json value might be a string, number, boolean, object or an array of other values */
+JSONTree.jsValue=function(value) {
+	if (value == null) {
+		return JSONTree.jsText("null","null");
 	}
-
-	this.create=function(data) {
-		id = 0;
-		return div(jsValue(data), {'class': 'json-content'});
+	var type = typeof value;
+	if (type === 'boolean' || type === 'number') {
+		return JSONTree.jsText(type,value);
+	} else if (type === 'string') {
+		return JSONTree.jsText(type,'"' + value + '"');
 	}
-	
-	/* icon for collapsing/expanding a json object/array */
-	function collapseIcon(id) {
-		var attrs = {'onclick': "jsonTree.toggleVisible('collapse_json" + id + "')" };
-		return span(collapse_icon, attrs);
-	}
-	
-	/* toggles an object visibility */
-	this.toggleVisible=function(id) {
-		var element = document.getElementById(id);
-		var element_class = element.className;
-		var classes = element_class.split(" ");
-		var visible = false;
-		for (var i = 0; i < classes.length; i++) {
-			if (classes[i] === "json-visible") {
-				visible = true;
-				break;
-			}
-		}
-		element.className = visible ? "json-collapsed json-object" : "json-object json-visible";
-		element.previousSibling.innerHTML = visible ? expand_icon : collapse_icon;
-	}
-	
-	/* a json value might be a string, number, boolean, object or an array of other values */
-	function jsValue(value) {
-		if (value == null) {
-			return jsText("null","null");
-		}
-		var type = typeof value;
-		if (type === 'boolean' || type === 'number') {
-			return jsText(type,value);
-		} else if (type === 'string') {
-			return jsText(type,'"' + value + '"');
-		}
-		 else {
-			id += 1;
-			return value instanceof Array ? jsArray(id, value) : jsObject(id, value);
-		}
-	}
-	
-	/* json object is made of property names and jsonValues */
-	function jsObject(id, data) {
-		var object_content = "{" + collapseIcon(id);;
-		var object_properties = '';
-		Object.keys(data).forEach(function(name, position, names) {
-			if (position == names.length - 1) { // dont add the comma
-				object_properties += div(jsProperty(name, data[name]));
-			} else {
-				object_properties += div(jsProperty(name, data[name]) + ',');
-			}			
-		});
-		object_content += div(object_properties, {'class': 'json-visible json-object', 'id': "collapse_json" + id});
-		return object_content += "}";
-	}
-	
-	/* a json property, name + value pair */
-	function jsProperty(name, value) {
-		return span('"' + name + '"', {'class': 'json-property'}) + " : " + jsValue(value);
-	}
-	
-	/* array of jsonValues */
-	function jsArray(id, data) {
-		var array_content = "[" + collapseIcon(id);;
-		var values = '';
-		for (var i = 0; i < data.length; i++) {
-			if (i == data.length - 1) {
-				values += div(jsValue(data[i]));
-			} else {
-				values += div(jsValue(data[i]) + ',');
-			}
-		}
-		array_content += div(values, {'class':'json-visible json-object', 'id': 'collapse_json' + id});
-		return array_content += "]";
-	}
-	
-	/* simple value(string, boolean, number...) */
-	function jsText(type, value) {
-		return span(value, {'class': "json-" + type});
+	 else {
+		JSONTree.id += 1;
+		return value instanceof Array ? JSONTree.jsArray(JSONTree.id, value) : JSONTree.jsObject(JSONTree.id, value);
 	}
 }
+
+/* json object is made of property names and jsonValues */
+JSONTree.jsObject=function(id, data) {
+	var object_content = "{" + JSONTree.collapseIcon(id);;
+	var object_properties = '';
+	Object.keys(data).forEach(function(name, position, names) {
+		if (position == names.length - 1) { // dont add the comma
+			object_properties += JSONTree.div(JSONTree.jsProperty(name, data[name]));
+		} else {
+			object_properties += JSONTree.div(JSONTree.jsProperty(name, data[name]) + ',');
+		}			
+	});
+	object_content += JSONTree.div(object_properties, {'class': 'json-visible json-object', 'id': "collapse_json" + id});
+	return object_content += "}";
+}
+
+/* a json property, name + value pair */
+JSONTree.jsProperty=function(name, value) {
+	return JSONTree.span('"' + name + '"', {'class': 'json-property'}) + " : " + JSONTree.jsValue(value);
+}
+
+/* array of jsonValues */
+JSONTree.jsArray=function(id, data) {
+	var array_content = "[" + JSONTree.collapseIcon(id);;
+	var values = '';
+	for (var i = 0; i < data.length; i++) {
+		if (i == data.length - 1) {
+			values += JSONTree.div(JSONTree.jsValue(data[i]));
+		} else {
+			values += JSONTree.div(JSONTree.jsValue(data[i]) + ',');
+		}
+	}
+	array_content += JSONTree.div(values, {'class':'json-visible json-object', 'id': 'collapse_json' + id});
+	return array_content += "]";
+}
+
+/* simple value(string, boolean, number...) */
+JSONTree.jsText=function(type, value) {
+	return JSONTree.span(value, {'class': "json-" + type});
+}
+
+JSONTree.toggleVisible=function(id) {
+	var element = document.getElementById(id);
+	var element_class = element.className;
+	var classes = element_class.split(" ");
+	var visible = false;
+	for (var i = 0; i < classes.length; i++) {
+		if (classes[i] === "json-visible") {
+			visible = true;
+			break;
+		}
+	}
+	element.className = visible ? "json-collapsed json-object" : "json-object json-visible";
+	element.previousSibling.innerHTML = visible ? JSONTree.expand_icon : JSONTree.collapse_icon;
+}
+
+JSONTree.configure=function(collapse_icon,expand_icon) {
+	JSONTree.collapse_icon = collapse_icon;
+	JSONTree.expand_icon = expand_icon;
+}
+
+JSONTree.collapse_icon=JSONTree.span('',{'class' : 'json-object-collapse'});
+
+JSONTree.expand_icon=JSONTree.span('',{'class' : 'json-object-expand'});
