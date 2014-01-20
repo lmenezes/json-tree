@@ -1,13 +1,21 @@
-// JSONTree 0.1.3
+// JSONTree 0.1.5
 function JSONTree() {
 	
 }
 
 JSONTree.id=0;
+JSONTree.random = 0;
 
 JSONTree.create=function(data) {
 	JSONTree.id = 0;
+	JSONTree.random = Math.random();
+	console.log(JSONTree.random);
 	return JSONTree.div(JSONTree.jsValue(data), {'class': 'json-content'});
+}
+
+JSONTree.newId=function() {
+	JSONTree.id += 1;
+	return JSONTree.random + "_" + JSONTree.id;
 }
 
 JSONTree.div=function(text, attrs) {
@@ -44,10 +52,9 @@ JSONTree.jsValue=function(value) {
 		return JSONTree.jsText(type,value);
 	} else if (type === 'string') {
 		return JSONTree.jsText(type,'"' + value + '"');
-	}
-	 else {
-		JSONTree.id += 1;
-		return value instanceof Array ? JSONTree.jsArray(JSONTree.id, value) : JSONTree.jsObject(JSONTree.id, value);
+	} else {
+		var elementId = JSONTree.newId();
+		return value instanceof Array ? JSONTree.jsArray(elementId, value) : JSONTree.jsObject(elementId, value);
 	}
 }
 

@@ -26,10 +26,10 @@
 }
 /* global properties for json object */
 .json-content {
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: 400;
 	color: #666;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Lucida Console", Monaco, monospace;
 }
 /* json property name style */
 .json-property {
