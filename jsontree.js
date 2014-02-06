@@ -1,4 +1,4 @@
-// JSONTree 0.1.5
+// JSONTree 0.1.6
 function JSONTree() {
 	
 }
@@ -9,7 +9,6 @@ JSONTree.random = 0;
 JSONTree.create=function(data) {
 	JSONTree.id = 0;
 	JSONTree.random = Math.random();
-	console.log(JSONTree.random);
 	return JSONTree.div(JSONTree.jsValue(data), {'class': 'json-content'});
 }
 
