@@ -1,10 +1,23 @@
-// JSONTree 0.1.6
+// JSONTree 0.1.7
 function JSONTree() {
 	
 }
 
 JSONTree.id=0;
 JSONTree.random = 0;
+
+JSONTree.escapeMap = {	'&': '&amp;',
+					'<': '&lt;',
+					'>': '&gt;',
+					'"': '&quot;',
+					"'": '&#x27;',
+					'/': '&#x2F;' };
+
+JSONTree.escape=function(text) {
+    return text.replace(/[&<>'"]/g, function(t) {
+        return JSONTree.escapeMap[t];
+    });
+}
 
 JSONTree.create=function(data) {
 	JSONTree.id = 0;
@@ -50,7 +63,7 @@ JSONTree.jsValue=function(value) {
 	if (type === 'boolean' || type === 'number') {
 		return JSONTree.jsText(type,value);
 	} else if (type === 'string') {
-		return JSONTree.jsText(type,'"' + value + '"');
+		return JSONTree.jsText(type,'"' + JSONTree.escape(value) + '"');
 	} else {
 		var elementId = JSONTree.newId();
 		return value instanceof Array ? JSONTree.jsArray(elementId, value) : JSONTree.jsObject(elementId, value);
@@ -74,7 +87,7 @@ JSONTree.jsObject=function(id, data) {
 
 /* a json property, name + value pair */
 JSONTree.jsProperty=function(name, value) {
-	return JSONTree.span('"' + name + '"', {'class': 'json-property'}) + " : " + JSONTree.jsValue(value);
+	return JSONTree.span('"' + JSONTree.escape(name) + '"', {'class': 'json-property'}) + " : " + JSONTree.jsValue(value);
 }
 
 /* array of jsonValues */
