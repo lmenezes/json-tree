@@ -51,5 +51,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks("grunt-jscs");
   grunt.registerTask('dev', ['watch'])
-  grunt.registerTask('build', ['clean', 'copy', 'uglify']);
+  grunt.registerTask('build', ['jscs', 'clean', 'copy', 'uglify']);
 };
