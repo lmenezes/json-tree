@@ -43,13 +43,17 @@ module.exports = function(grunt) {
           'dist/js/jsontree.min.js': ['src/jsontree.js']
         }
       }
+    },
+    qunit: {
+      all: ['tests/jsontree.html']
     }
   });
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks("grunt-jscs");
   grunt.registerTask('dev', ['watch'])
-  grunt.registerTask('build', ['jscs', 'clean', 'copy', 'uglify']);
+  grunt.registerTask('build', ['clean', 'jscs', 'qunit', 'copy', 'uglify']);
 };
