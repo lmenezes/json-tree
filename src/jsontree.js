@@ -1,4 +1,3 @@
-// JSONTree 0.1.7
 function JSONTree() {
 
 }
