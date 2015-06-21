@@ -1,65 +1,44 @@
-/* json string right " */
-.json-object-expand:after {
-	content: '+';
+.jstValue {
+    white-space: pre;
+    font-size: 10px;
+    font-weight: 400;
+    font-family: "Lucida Console", Monaco, monospace;
 }
-.json-object-collapse:after {
-	content: '-';
+.jstComma {
+    white-space: pre;
 }
-
-/* properties for expand icon */
-.json-object-expand {
-	display: inline-block;
-	font-weight: 500;
-	color: #999;
-	margin-left: 1px;
-	margin-right: 1px;
-	cursor: pointer;
+.jstProperty {
+    color: #666;
 }
-/* properties for collapse icon */
-.json-object-collapse {
-	display: inline-block;
-	font-weight: 500;
-	color: #999;
-	margin-left: 1px;
-	margin-right: 1px;
-	cursor: pointer;
+.jstBracket {
+    white-space: pre;
 }
-/* global properties for json object */
-.json-content {
-	font-size: 10px;
-	font-weight: 400;
-	color: #666;
-	font-family: "Lucida Console", Monaco, monospace;
+.jstBool {
+    color: #2525CC;
 }
-/* json property name style */
-.json-property {
-	font-weight: 500;
+.jstNum {
+    color: #D036D0;
 }
-/* json number style */
-.json-number {
-	color: #B627B6;
+.jstNull {
+    color: gray;
 }
-/* json string style */
-.json-string {
-	color: #2DB669;
+.jstStr {
+    color: #2DB669;
 }
-/* json boolean style */
-.json-boolean {
-	color: #2525CC;
+.jstFold:after {
+    content: ' -';
+    cursor: pointer;
 }
-/* json null style */
-.json-null {
-	color: gray;
+.jstExpand {
+    white-space: normal;
 }
-/* json object */
-.json-object {
-	padding-left: 2em;
+.jstExpand:after {
+    content: ' +';
+    cursor: pointer;
 }
-/* visible object */
-.json-visible {
-	height: auto;
+.jstFolded {
+    white-space: normal !important;
 }
-/* collapsed object */
-.json-collapsed {
-	display: none;
+.jstHiddenBlock {
+    display: none;
 }

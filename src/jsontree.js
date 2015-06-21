@@ -1,144 +1,155 @@
-function JSONTree() {
+var JSONTree = (function() {
 
-}
+  var escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    '\'': '&#x27;',
+    '/': '&#x2F;'
+  };
 
-JSONTree.id = 0;
-JSONTree.random = 0;
+  var defaultSettings = {
+    indent: 2
+  };
 
-JSONTree.escapeMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  '\'': '&#x27;',
-  '/': '&#x2F;'
-};
+  var id = 0;
+  var instances = 0;
 
-JSONTree.escape = function(text) {
-  return text.replace(/[&<>'"]/g, function(t) {
-    return JSONTree.escapeMap[t];
-  });
-}
+  this.create = function(data, settings) {
+    instances += 1;
+    return _span(_jsVal(data, 0, false), {class: 'jstValue'});
+  };
 
-JSONTree.create = function(data) {
-  JSONTree.id = 0;
-  JSONTree.random = Math.random();
-  return JSONTree.div(JSONTree.jsValue(data), {class: 'json-content'});
-}
-
-JSONTree.newId = function() {
-  JSONTree.id += 1;
-  return JSONTree.random + '_' + JSONTree.id;
-}
-
-JSONTree.div = function(text, attrs) {
-  return JSONTree.html('div', text, attrs);
-}
-
-JSONTree.span = function(text, attrs) {
-  return JSONTree.html('span', text, attrs);
-}
-
-JSONTree.html = function(type, text, attrs) {
-  var html = '<' + type;
-  if (attrs != null) {
-    Object.keys(attrs).forEach(function(attr) {
-      html += ' ' + attr + '=\"' + attrs[attr] + '\"';
+  var _escape = function(text) {
+    return text.replace(/[&<>'"]/g, function(c) {
+      return escapeMap[c];
     });
-  }
-  html += '>' + text + '</' + type + '>';
-  return html;
-}
-/* icon for collapsing/expanding a json object/array */
-JSONTree.collapseToggle = function(id) {
-  var attrs = {onclick: 'JSONTree.toggleVisible(\'collapse_json' + id + '\')'};
-  return JSONTree.span(JSONTree.collapseIcon, attrs);
-}
+  };
 
-/* a json value might be a string, number, boolean, object or an array of other values */
-JSONTree.jsValue = function(value) {
-  if (value == null) {
-    return JSONTree.jsText('null', 'null');
-  }
-  var type = typeof value;
-  if (type === 'boolean' || type === 'number') {
-    return JSONTree.jsText(type, value);
-  } else if (type === 'string') {
-    return JSONTree.jsText(type, '"' + JSONTree.escape(value) + '"');
-  } else {
-    var elementId = JSONTree.newId();
-    return value instanceof Array ? JSONTree.jsArray(elementId,
-        value) : JSONTree.jsObject(elementId, value);
-  }
-}
+  var _id = function() {
+    return instances + '_' + id++;
+  };
 
-/* json object is made of property names and jsonValues */
-JSONTree.jsObject = function(id, data) {
-  var objectContent = '{' + JSONTree.collapseToggle(id);
-  var objectProperties = '';
-  Object.keys(data).forEach(function(name, position, names) {
-    if (position == names.length - 1) { // dont add the comma
-      objectProperties += JSONTree.div(JSONTree.jsProperty(name, data[name]));
+  var _jsVal = function(value, depth, indent) {
+    if (value !== null) {
+      var type = typeof value;
+      switch (type) {
+        case 'boolean':
+          return _jsBool(value, indent ? depth : 0);
+        case 'number':
+          return _jsNum(value, indent ? depth : 0);
+        case 'string':
+          return _jsStr(value, indent ? depth : 0);
+        default:
+          if (value instanceof Array) {
+            return _jsArr(value, depth, indent);
+          } else {
+            return _jsObj(value, depth, indent);
+          }
+      }
     } else {
-      objectProperties += JSONTree.div(JSONTree.jsProperty(name,
-          data[name]) + ',');
+      return _jsNull(indent ? depth : 0);
     }
-  });
-  objectContent += JSONTree.div(objectProperties,
-      {class: 'json-visible json-object', id: 'collapse_json' + id});
-  return objectContent + '}';
-}
+  };
 
-/* a json property, name + value pair */
-JSONTree.jsProperty = function(name, value) {
-  return JSONTree.span('"' + JSONTree.escape(name) + '"',
-          {'class': 'json-property'}) + ' : ' + JSONTree.jsValue(value);
-}
+  var _jsObj = function(object, depth, indent) {
+    var id = _id();
+    var content = Object.keys(object).map(function(property) {
+      return _property(property, object[property], depth + 1, true);
+    }).join(_comma());
+    var body = [
+      _openBracket('{', indent ? depth : 0, id),
+      _span(content, {id: id}),
+      _closeBracket('}', depth)
+    ].join('\n');
+    return _span(body, {})
+  };
 
-/* array of jsonValues */
-JSONTree.jsArray = function(id, data) {
-  var arrayContent = '[' + JSONTree.collapseToggle(id);
-  ;
-  var values = '';
-  for (var i = 0; i < data.length; i++) {
-    if (i == data.length - 1) {
-      values += JSONTree.div(JSONTree.jsValue(data[i]));
+  var _jsArr = function(array, depth, indent) {
+    var id = _id();
+    var body = array.map(function(element) {
+      return _jsVal(element, depth + 1, true);
+    }).join(_comma());
+    var arr = [
+      _openBracket('[', indent ? depth : 0, id),
+      _span(body, {id: id}),
+      _closeBracket(']', depth)
+    ].join('\n');
+    return arr;
+  };
+
+  var _jsStr = function(value, depth) {
+    return _span(_indent(_quote(_escape(value)), depth), {class: 'jstStr'});
+  };
+
+  var _jsNum = function(value, depth) {
+    return _span(_indent(value, depth), {class: 'jstNum'});
+  };
+
+  var _jsBool = function(value, depth) {
+    return _span(_indent(value, depth), {class: 'jstBool'});
+  };
+
+  var _jsNull = function(depth) {
+    return _span(_indent('null', depth), {class: 'jstNull'});
+  };
+
+  var _property = function(name, value, depth) {
+    var property = _indent(_quote(_escape(name)) + ': ', depth);
+    var propertyValue = _span(_jsVal(value, depth, false), {});
+    return _span(property + propertyValue, {class: 'jstProperty'});
+  }
+
+  var _quote = function(value) {
+    return '"' + value + '"';
+  }
+
+  var _comma = function() {
+    return _span(',\n', {class: 'jstComma'});
+  }
+
+  var _span = function(value, attrs) {
+    return _tag('span', attrs, value);
+  }
+
+  var _tag = function(tag, attrs, content) {
+    return '<' + tag + Object.keys(attrs).map(function(attr) {
+          return ' ' + attr + '="' + attrs[attr] + '"';
+        }).join('') + '>' +
+        content +
+        '</' + tag + '>';
+  }
+
+  var _openBracket = function(symbol, depth, id) {
+    return (
+    _span(_indent(symbol, depth), {class: 'jstBracket'}) +
+    _span('', {class: 'jstFold', onclick: 'JSONTree.toggle(\'' + id + '\')'})
+    );
+  }
+
+  this.toggle = function(id) {
+    var element = document.getElementById(id);
+    var parent = element.parentNode;
+    var toggleButton = element.previousElementSibling;
+    if (element.className === '') {
+      element.className = 'jstHiddenBlock';
+      parent.className = 'jstFolded';
+      toggleButton.className = 'jstExpand';
     } else {
-      values += JSONTree.div(JSONTree.jsValue(data[i]) + ',');
-    }
-  }
-  arrayContent += JSONTree.div(values,
-      {'class': 'json-visible json-object', 'id': 'collapse_json' + id});
-  return arrayContent += ']';
-}
-
-/* simple value(string, boolean, number...) */
-JSONTree.jsText = function(type, value) {
-  return JSONTree.span(value, {class: 'json-' + type});
-}
-
-JSONTree.toggleVisible = function(id) {
-  var element = document.getElementById(id);
-  var elementClass = element.className;
-  var classes = elementClass.split(' ');
-  var visible = false;
-  for (var i = 0; i < classes.length; i++) {
-    if (classes[i] === 'json-visible') {
-      visible = true;
-      break;
+      element.className = '';
+      parent.className = '';
+      toggleButton.className = 'jstFold';
     }
   }
 
-  element.className = 'json-object json-' + (visible ? 'collapsed' : 'visible');
-  var innerHTML = visible ? JSONTree.expandIcon : JSONTree.collapseIcon;
-  element.previousSibling.innerHTML = innerHTML;
-}
+  var _closeBracket = function(symbol, depth) {
+    return _span(_indent(symbol, depth), {});
+  }
 
-JSONTree.configure = function(collapseIcon, expandIcon) {
-  JSONTree.collapseIcon = collapseIcon;
-  JSONTree.expandIcon = expandIcon;
-}
+  var _indent = function(value, depth) {
+    return Array((depth * 2) + 1).join(' ') + value;
+  };
 
-JSONTree.collapseIcon = JSONTree.span('', {class: 'json-object-collapse'});
-
-JSONTree.expandIcon = JSONTree.span('', {class: 'json-object-expand'});
+  return this;
+})();
