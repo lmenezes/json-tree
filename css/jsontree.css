@@ -1,17 +1,18 @@
 .jstValue {
-    white-space: pre;
+    white-space: pre-wrap;
     font-size: 10px;
     font-weight: 400;
     font-family: "Lucida Console", Monaco, monospace;
 }
 .jstComma {
-    white-space: pre;
+    white-space: pre-wrap;
 }
 .jstProperty {
     color: #666;
+    word-wrap: break-word;
 }
 .jstBracket {
-    white-space: pre;
+    white-space: pre-wrap;;
 }
 .jstBool {
     color: #2525CC;
