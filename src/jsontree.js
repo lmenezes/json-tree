@@ -63,7 +63,7 @@ var JSONTree = (function() {
       _span(content, {id: id}),
       _closeBracket('}', depth)
     ].join('\n');
-    return _span(body, {})
+    return _span(body, {});
   };
 
   var _jsArr = function(array, depth, indent) {
@@ -99,19 +99,19 @@ var JSONTree = (function() {
     var property = _indent(_quote(_escape(name)) + ': ', depth);
     var propertyValue = _span(_jsVal(value, depth, false), {});
     return _span(property + propertyValue, {class: 'jstProperty'});
-  }
+  };
 
   var _quote = function(value) {
     return '"' + value + '"';
-  }
+  };
 
   var _comma = function() {
     return _span(',\n', {class: 'jstComma'});
-  }
+  };
 
   var _span = function(value, attrs) {
     return _tag('span', attrs, value);
-  }
+  };
 
   var _tag = function(tag, attrs, content) {
     return '<' + tag + Object.keys(attrs).map(function(attr) {
@@ -119,14 +119,14 @@ var JSONTree = (function() {
         }).join('') + '>' +
         content +
         '</' + tag + '>';
-  }
+  };
 
   var _openBracket = function(symbol, depth, id) {
     return (
     _span(_indent(symbol, depth), {class: 'jstBracket'}) +
     _span('', {class: 'jstFold', onclick: 'JSONTree.toggle(\'' + id + '\')'})
     );
-  }
+  };
 
   this.toggle = function(id) {
     var element = document.getElementById(id);
@@ -141,11 +141,11 @@ var JSONTree = (function() {
       parent.className = '';
       toggleButton.className = 'jstFold';
     }
-  }
+  };
 
   var _closeBracket = function(symbol, depth) {
     return _span(_indent(symbol, depth), {});
-  }
+  };
 
   var _indent = function(value, depth) {
     return Array((depth * 2) + 1).join(' ') + value;
