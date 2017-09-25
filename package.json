@@ -1,6 +1,6 @@
 {
   "name": "json-tree",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.1.0",
