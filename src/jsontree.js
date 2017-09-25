@@ -80,7 +80,8 @@ var JSONTree = (function() {
   };
 
   var _jsStr = function(value, depth) {
-    return _span(_indent(_quote(_escape(value)), depth), {class: 'jstStr'});
+    var jsonString = JSON.stringify(value);
+    return _span(_indent(jsonString, depth), {class: 'jstStr'});
   };
 
   var _jsNum = function(value, depth) {
@@ -96,7 +97,7 @@ var JSONTree = (function() {
   };
 
   var _property = function(name, value, depth) {
-    var property = _indent(_quote(_escape(name)) + ': ', depth);
+    var property = _indent(_escape(JSON.stringify(name)) + ': ', depth);
     var propertyValue = _span(_jsVal(value, depth, false), {});
     return _span(property + propertyValue, {class: 'jstProperty'});
   };
