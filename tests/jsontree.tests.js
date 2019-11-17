@@ -1,28 +1,88 @@
-QUnit.test("#1 Represent empty object", function(assert) {
+QUnit.test("Build empty object", function(assert) {
   var result = JSONTree.create({});
-  var expected = '<span class=\"jstValue\"><span><span class=\"jstBracket\">{</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'1_0\')\"></span>\n<span id=\"1_0\"></span>\n<span>}</span></span></span>';
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_1_0\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+    '<br>',
+    '',
+    '',
+    '<br>',
+    '<span></span><span id=\"opening_1_0_end\" class=\"jstBracket\">}</span></span>'
+  ].join('');
   assert.equal(result, expected, 'same content');
 });
 
-QUnit.test("#2 Represent empty array", function(assert) {
+QUnit.test("Build empty array", function(assert) {
   var result = JSONTree.create([]);
-  var expected = '<span class=\"jstValue\"><span class=\"jstBracket\">[</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'2_1\')\"></span>\n<span id=\"2_1\"></span>\n<span>]</span></span>';
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_2_1\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+    '<br>',
+    '',
+    '',
+    '<br>',
+    '<span></span><span id=\"opening_2_1_end\" class=\"jstBracket\">]</span></span>'
+  ].join('');
   assert.equal(result, expected, 'same content');
 });
 
-QUnit.test("#3 Represent flat object", function(assert) {
+
+QUnit.test("Build single element object", function(assert) {
   var result = JSONTree.create({key: 'value'});
-  var expected = '<span class=\"jstValue\"><span><span class=\"jstBracket\">{</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'3_2\')\"></span>\n<span id=\"3_2\"><span class=\"jstProperty\">  &quot;key&quot;: <span><span class=\"jstStr\">&quot;value&quot;</span></span></span></span>\n<span>}</span></span></span>';
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_3_2\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+    '<br>',
+    '',
+    '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;key&quot;</span><span class="jstColon">: </span>',
+    '<span class=\"jstStr\">&quot;value&quot;</span>',
+    '<br>',
+    '<span></span><span id=\"opening_3_2_end\" class=\"jstBracket\">}</span></span>'
+    ].join('');
   assert.equal(result, expected, 'same content');
 });
 
-QUnit.test("#4 Represent flat array", function(assert) {
+QUnit.test("Build multiple elements object", function(assert) {
+  var result = JSONTree.create({key: 'value', key2: 'value2'});
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_4_3\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+    '<br>',
+    '',
+    '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;key&quot;</span><span class="jstColon">: </span>',
+    '<span class=\"jstStr\">&quot;value&quot;</span><span class=\"jstComma\">,</span><br>',
+    '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;key2&quot;</span><span class="jstColon">: </span>',
+    '<span class=\"jstStr\">&quot;value2&quot;</span>',
+    '<br>',
+    '<span></span><span id=\"opening_4_3_end\" class=\"jstBracket\">}</span></span>'
+    ].join('');
+  assert.equal(result, expected, 'same content');
+});
+
+QUnit.test("Build single element array", function(assert) {
   var result = JSONTree.create(['value']);
-  var expected = '<span class=\"jstValue\"><span class=\"jstBracket\">[</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'4_3\')\"></span>\n<span id=\"4_3\"><span class=\"jstStr\">  &quot;value&quot;</span></span>\n<span>]</span></span>';
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_5_4\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstStr\">&quot;value&quot;</span>',
+     '<br>',
+     '<span></span><span id=\"opening_5_4_end\" class=\"jstBracket\">]</span></span>'
+  ].join('');
   assert.equal(result, expected, 'same content');
 });
 
-QUnit.test("#5 Represent complex obejct", function(assert) {
+QUnit.test("Build multiple elements array", function(assert) {
+  var result = JSONTree.create(['value', 'value2']);
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_6_5\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstStr\">&quot;value&quot;</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstStr\">&quot;value2&quot;</span>',
+     '<br>',
+     '<span></span><span id=\"opening_6_5_end\" class=\"jstBracket\">]</span></span>'
+  ].join('');
+  assert.equal(result, expected, 'same content');
+});
+
+QUnit.test("Build complex object", function(assert) {
   var result = JSONTree.create({
     foo: {
       bar: 'foobar',
@@ -46,12 +106,88 @@ QUnit.test("#5 Represent complex obejct", function(assert) {
     baz: true,
     foobar: [0, 1, 2]
   });
-  var expected = '<span class=\"jstValue\"><span><span class=\"jstBracket\">{</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_4\')\"></span>\n<span id=\"5_4\"><span class=\"jstProperty\">  &quot;foo&quot;: <span><span><span class=\"jstBracket\">{</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_5\')\"></span>\n<span id=\"5_5\"><span class=\"jstProperty\">    &quot;bar&quot;: <span><span class=\"jstStr\">&quot;foobar&quot;</span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">    &quot;baz&quot;: <span><span class=\"jstStr\">&quot;foobaz&quot;</span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">    &quot;qux&quot;: <span><span class=\"jstBracket\">[</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_6\')\"></span>\n<span id=\"5_6\"><span><span class=\"jstBracket\">      {</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_7\')\"></span>\n<span id=\"5_7\"><span class=\"jstProperty\">        &quot;foobar&quot;: <span><span class=\"jstStr\">&quot;bar&quot;</span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">        &quot;foobaz&quot;: <span><span class=\"jstStr\">&quot;baz&quot;</span></span></span></span>\n<span>      }</span></span></span>\n<span>    ]</span></span></span></span>\n<span>  }</span></span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">  &quot;bar&quot;: <span><span class=\"jstBracket\">[</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_8\')\"></span>\n<span id=\"5_8\"><span><span class=\"jstBracket\">    {</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_9\')\"></span>\n<span id=\"5_9\"><span class=\"jstProperty\">      &quot;foo&quot;: <span><span class=\"jstStr\">&quot;barfoo&quot;</span></span></span></span>\n<span>    }</span></span><span class=\"jstComma\">,\n</span><span><span class=\"jstBracket\">    {</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_10\')\"></span>\n<span id=\"5_10\"><span class=\"jstProperty\">      &quot;qux&quot;: <span><span class=\"jstNull\">null</span></span></span></span>\n<span>    }</span></span></span>\n<span>  ]</span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">  &quot;qux&quot;: <span><span class=\"jstBracket\">[</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_11\')\"></span>\n<span id=\"5_11\"><span class=\"jstStr\">    &quot;foo&quot;</span><span class=\"jstComma\">,\n</span><span class=\"jstStr\">    &quot;bar&quot;</span><span class=\"jstComma\">,\n</span><span class=\"jstStr\">    &quot;foobar&quot;</span></span>\n<span>  ]</span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">  &quot;baz&quot;: <span><span class=\"jstBool\">true</span></span></span><span class=\"jstComma\">,\n</span><span class=\"jstProperty\">  &quot;foobar&quot;: <span><span class=\"jstBracket\">[</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'5_12\')\"></span>\n<span id=\"5_12\"><span class=\"jstNum\">    0</span><span class=\"jstComma\">,\n</span><span class=\"jstNum\">    1</span><span class=\"jstComma\">,\n</span><span class=\"jstNum\">    2</span></span>\n<span>  ]</span></span></span></span>\n<span>}</span></span></span>';
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_7_6\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;foo&quot;</span><span class="jstColon">: </span>',
+     '<span id=\"opening_7_7\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;bar&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstStr\">&quot;foobar&quot;</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;baz&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstStr\">&quot;foobaz&quot;</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;qux&quot;</span><span class="jstColon">: </span>',
+     '<span id=\"opening_7_8\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_9\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;foobar&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstStr\">&quot;bar&quot;</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;foobaz&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstStr\">&quot;baz&quot;</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_9_end\" class=\"jstBracket\">}</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_8_end\" class=\"jstBracket\">]</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;</span><span id=\"opening_7_7_end\" class=\"jstBracket\">}</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;bar&quot;</span><span class="jstColon">: </span>',
+     '<span id=\"opening_7_10\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_11\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;foo&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstStr\">&quot;barfoo&quot;</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_11_end\" class=\"jstBracket\">}</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_12\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;qux&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstNull\">null</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id=\"opening_7_12_end\" class=\"jstBracket\">}</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;</span><span id=\"opening_7_10_end\" class=\"jstBracket\">]</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;qux&quot;</span><span class="jstColon">: </span>',
+     '<span id=\"opening_7_13\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstStr\">&quot;foo&quot;</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstStr\">&quot;bar&quot;</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstStr\">&quot;foobar&quot;</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;</span><span id=\"opening_7_13_end\" class=\"jstBracket\">]</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;baz&quot;</span><span class="jstColon">: </span>',
+     '<span class=\"jstBool\">true</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;foobar&quot;</span><span class="jstColon">: </span>',
+     '<span id=\"opening_7_14\" class=\"jstBracket\">[</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+     '<br>',
+     '',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstNum\">0</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstNum\">1</span><span class=\"jstComma\">,</span><br>',
+     '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"jstNum\">2</span>',
+     '<br>',
+     '<span>&nbsp;&nbsp;</span><span id=\"opening_7_14_end\" class=\"jstBracket\">]</span>',
+     '<br>',
+     '<span></span><span id=\"opening_7_6_end\" class=\"jstBracket\">}</span></span>',
+  ].join('');
   assert.equal(result, expected, 'same content');
 });
 
-QUnit.test("#6 Handle escaping of content", function(assert) {
-  var result = JSONTree.create({key: "\"value\""});
-  var expected = '<span class=\"jstValue\"><span><span class=\"jstBracket\">{</span><span class=\"jstFold\" onclick=\"JSONTree.toggle(\'6_13\')\"></span>\n<span id=\"6_13\"><span class=\"jstProperty\">  &quot;key&quot;: <span><span class=\"jstStr\">&quot;\\&quot;value\\&quot;&quot;</span></span></span></span>\n<span>}</span></span></span>';
+QUnit.test("Build object that needs escaping", function(assert) {
+  var result = JSONTree.create({key: "\"value & <>/'\""});
+  var expected = [
+    '<span class=\"jstValue\"><span id=\"opening_8_15\" class=\"jstBracket\">{</span><span>&nbsp;<a href=\"#\" class=\"jstCollapse\" onclick=\"JSONTree.click(this); return false; \">-</a>&nbsp;</span>',
+    '<br>',
+    '<span>&nbsp;&nbsp;</span><span class=\"jstProperty\">&quot;key&quot;</span><span class="jstColon">: </span><span class=\"jstStr\">&quot;\\&quot;value &amp; &lt;&gt;/&#x27;\\&quot;&quot;</span>',
+    '<br><span></span><span id=\"opening_8_15_end\" class=\"jstBracket\">}</span></span>'
+  ].join('');
   assert.equal(result, expected, 'same content');
 });
