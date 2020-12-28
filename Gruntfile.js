@@ -26,12 +26,14 @@ module.exports = function(grunt) {
         ]
       }
     },
-    jscs: {
-      src: ['src/jsontree.js'],
+    eslint: {
       options: {
-        preset: 'google',
-        requireCamelCaseOrUpperCaseIdentifiers: "ignoreProperties"
-      }
+        configFile: 'conf/eslint.json',
+        fix: true
+      },
+      target: [
+        'src/jsontree.js'
+      ]
     },
     uglify: {
       options: {
@@ -53,7 +55,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks("grunt-jscs");
-  grunt.registerTask('dev', ['watch'])
-  grunt.registerTask('build', ['clean', 'jscs', 'qunit', 'copy', 'uglify']);
+  grunt.loadNpmTasks('grunt-eslint');
+  grunt.registerTask('dev', ['watch']);
+  grunt.registerTask('build', ['clean', 'eslint', 'qunit', 'copy', 'uglify']);
 };
