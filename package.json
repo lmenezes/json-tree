@@ -2,20 +2,22 @@
   "name": "@lmenezes/json-tree",
   "version": "0.4.0",
   "devDependencies": {
+    "eslint": "^7.16.0",
+    "eslint-config-google": "^0.14.0",
     "grunt": "^1.3.0",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-qunit": "^4.0.0",
-    "grunt-contrib-uglify": "^3.0.1",
-    "grunt-contrib-watch": "^1.1.0"
+    "grunt-eslint": "^23.0.0"
   },
   "description": "json-tree",
-  "main": "dist/js/jsontree.js",
-  "style": "dist/css/jsontree.css",
+  "main": "jsontree.js",
+  "style": "jsontree.css",
   "directories": {
     "test": "tests"
   },
+  "files": [
+    "jsontree.js",
+    "jsontree.css"
+  ],
   "dependencies": {},
   "scripts": {
     "test": "grunt test"

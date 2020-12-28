@@ -1,12 +1,11 @@
-var JSONTree = (function() {
-
+var JSONTree = (function() { // eslint-disable-line no-unused-vars
   var escapeMap = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
     '\'': '&#x27;',
-    '/': '&#x2F;'
+    '/': '&#x2F;',
   };
 
   var internalId = 0;
@@ -20,7 +19,7 @@ var JSONTree = (function() {
 
   this.click = function(elem) {
     var symbol = elem.innerHTML;
-    if (symbol ===  '-') {
+    if (symbol === '-') {
       var id = elem.parentElement.previousElementSibling.id;
       var siblings = _nextUntil(elem.parentElement, id + '_end');
       _hide(elem.parentElement, siblings);
@@ -91,12 +90,12 @@ var JSONTree = (function() {
       data,
       _br(),
       _indent(depth),
-      closing
+      closing,
     ].join('');
   };
 
   var _jsArr = function(array, depth) {
-    var  id = _id();
+    var id = _id();
     var body = array.map(function(element) {
       return _indent(depth + 1) + _jsVal(element, depth + 1);
     }).join(_comma() + _br());
@@ -126,7 +125,7 @@ var JSONTree = (function() {
     var propertyValue = _jsVal(value, depth);
     return [
       property + _colon(),
-      propertyValue
+      propertyValue,
     ].join('');
   };
 
@@ -136,10 +135,6 @@ var JSONTree = (function() {
 
   var _comma = function() {
     return _element(',', {class: 'jstComma'});
-  };
-
-  var _span = function(value, attrs) {
-    return _tag('span', attrs, value);
   };
 
   var _element = function(content, attrs) {
