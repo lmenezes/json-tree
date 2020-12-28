@@ -20,7 +20,7 @@
   ],
   "dependencies": {},
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt qunit"
   },
   "repository": {
     "type": "git",
