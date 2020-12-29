@@ -1,40 +1,43 @@
 .jstValue {
   font-size: 12px;
   font-weight: 400;
-  font-family: "Lucida Console", Monaco, monospace;
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
-.jstComma {
 
-}
 .jstProperty {
-  color: #666;
-  word-wrap: break-word;
+  color: #68bb97;
 }
-.jstBracket {
 
-}
 .jstBool {
-  color: #2525CC;
-}
-.jstNum {
-  color: #D036D0;
-}
-.jstNull {
-  color: gray;
-}
-.jstStr {
-  color: #2DB669;
+  color: #1CA8DD;
 }
 
-.jstHiddenBlock {
-  display: none;
+.jstNum {
+  color: #9F85FF;
+}
+
+.jstNull {
+  color: #D0D0D0;
+}
+
+.jstStr {
+  color: #9cc966;
+}
+
+.jstComma {
 }
 
 .jstColon {
-
 }
 
 .jstCollapse {
   text-decoration: none;
   color: inherit;
+}
+
+.jstBracket {
+}
+
+.jstHiddenBlock {
+  display: none;
 }
