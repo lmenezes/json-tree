@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/lmenezes/json-tree/workflows/Node.js%20CI/badge.svg?branch=master)
+
 # json-tree
 
 simple JS library that creates an html navigable tree from JSON object.
