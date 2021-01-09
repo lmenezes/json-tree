@@ -8,17 +8,6 @@ li.jstItem {
   padding-left: 0px;
   list-style: none;
 }
-.jstCollapse {
-  margin-left: -15px;
-  position: absolute;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.jstCollapse a {
-  text-decoration: none;
-  color: inherit;
-}
 
 .jstTree {
   font-size: 12px;
@@ -53,8 +42,31 @@ li.jstItem {
 }
 
 .jstCollapse {
+  margin-left: -15px;
+  position: absolute;
+  -webkit-user-select: none;
+  user-select: none;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
+}
+
+.jstExpand {
+  margin-left: -15px;
+  position: absolute;
+  -webkit-user-select: none;
+  user-select: none;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.jstCollapse::before {
+  content: '-';
+}
+
+.jstExpand::before {
+  content: '+'
 }
 
 .jstBracket {

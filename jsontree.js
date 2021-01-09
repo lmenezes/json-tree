@@ -17,22 +17,21 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
   };
 
   this.click = function(elem) {
-    var symbol = elem.innerHTML;
-    if (symbol === '-') {
-      var block = findNextWithClass(elem.parentElement, 'jstBracket');
+    if (elem.nextElementSibling.className !== 'jstHiddenBlock') {
+      var block = findNextWithClass(elem, 'jstBracket');
       var siblings = _nextUntil(block, block.id + '_end');
-      _hide(elem.parentElement, siblings);
-      elem.innerHTML = '+';
+      _hide(elem, siblings);
+      elem.className = 'jstExpand';
     } else {
-      var block = findNextWithClass(elem.parentElement, 'jstBracket');
-      var hiddenElements = findNextWithClass(elem.parentElement, 'jstHiddenBlock');
+      var block = findNextWithClass(elem, 'jstBracket');
+      var hiddenElements = findNextWithClass(elem, 'jstHiddenBlock');
       var children = hiddenElements.children;
       for (var i = children.length; i > 0; i--) {
         var child = children[i - 1];
         block.after(child);
       }
       hiddenElements.remove();
-      elem.innerHTML = '-';
+      elem.className = 'jstCollapse';
     }
   };
 
@@ -98,9 +97,8 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
   };
 
   var _collapseElem = function() {
-    var onClick = 'onclick="JSONTree.click(this); return false;';
-    var a = '<a href="#" ' + onClick + '">-</a>';
-    return '<span class="jstCollapse">' + a + '</span>';
+    var onClick = 'onclick="JSONTree.click(this); return false;"';
+    return '<span class="jstCollapse" ' + onClick + '></span>';
   };
 
   var _canCollapse = function(data) {
