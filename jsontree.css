@@ -1,3 +1,15 @@
+ul.jstList {
+  padding-left: 10px;
+  list-style: none;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+li.jstItem {
+  padding-left: 10px;
+  list-style: none;
+}
+
+
 .jstValue {
   font-size: 12px;
   font-weight: 400;

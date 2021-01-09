@@ -13,8 +13,7 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
 
   this.create = function(data, settings) {
     instances += 1;
-    var value = _jsVal(data, 0);
-    return '<span class="jstValue">' + value + '</span>';
+    return _jsVal(data);
   };
 
   this.click = function(elem) {
@@ -47,33 +46,40 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
     });
   };
 
-  var _jsVal = function(value, depth) {
+  var _jsVal = function(value) {
     var type = typeof value;
     switch (type) {
       case 'boolean':
-        return _jsBool(value, depth);
+        return _jsBool(value);
       case 'number':
-        return _jsNum(value, depth);
+        return _jsNum(value);
       case 'string':
-        return _jsStr(value, depth);
+        return _jsStr(value);
       default:
         if (value === null) {
-          return _jsNull(depth);
+          return _jsNull();
         } else if (value instanceof Array) {
-          return _jsArr(value, depth);
+          return _jsArr(value);
         } else {
-          return _jsObj(value, depth);
+          return _jsObj(value);
         }
     }
   };
 
-  var _jsObj = function(object, depth) {
+  var _jsObj = function(object) {
     var id = _id();
-    var body = Object.keys(object).map(function(property) {
-      var prop = _property(property, object[property], depth + 1);
-      return _indent(depth + 1) + prop;
-    }).join(_comma() + _br());
-    return _collection(_open('{', id), body, _close('}', id), depth);
+    var elements = [];
+    var keys = Object.keys(object);
+    keys.forEach(function(key, index) {
+      var html = ['<li class="jstItem">', _property(key, object[key])];
+      if (index !== keys.length - 1) {
+        html.push(_comma());
+      }
+      html.push('</li>');
+      elements.push(html.join(''));
+    });
+    var body = elements.join('');
+    return _collection(_open('{', id), body, _close('}', id));
   };
 
   var _collapseElem = function() {
@@ -82,51 +88,54 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
     return '<span>&nbsp;' + a + '&nbsp;</span>';
   };
 
-  var _collection = function(opening, data, closing, depth) {
+  var _collection = function(opening, data, closing) {
     return [
       opening,
       _collapseElem(),
-      _br(), // TODO: avoid line break for empty collections?
+      '<ul class="jstList">',
       data,
-      _br(),
-      _indent(depth),
+      '</ul>',
       closing,
     ].join('');
   };
 
-  var _jsArr = function(array, depth) {
+  var _jsArr = function(array) {
     var id = _id();
-    var body = array.map(function(element) {
-      return _indent(depth + 1) + _jsVal(element, depth + 1);
-    }).join(_comma() + _br());
-    return _collection(_open('[', id), body, _close(']', id), depth);
+    var elements = [];
+    array.forEach(function(element, index) {
+      var html = ['<li class="jstItem">', _jsVal(element)];
+      if (index !== array.length - 1) {
+        html.push(_comma());
+      }
+      html.push('</li>');
+      elements.push(html.join(''));
+    });
+    var body = elements.join('');
+    return _collection(_open('[', id), body, _close(']', id));
   };
 
-  var _jsStr = function(value, depth) {
+  var _jsStr = function(value) {
     var jsonString = _escape(JSON.stringify(value));
     return _element(jsonString, {class: 'jstStr'});
   };
 
-  var _jsNum = function(value, depth) {
+  var _jsNum = function(value) {
     return _element(value, {class: 'jstNum'});
   };
 
-  var _jsBool = function(value, depth) {
+  var _jsBool = function(value) {
     return _element(value, {class: 'jstBool'});
   };
 
-  var _jsNull = function(depth) {
+  var _jsNull = function() {
     return _element('null', {class: 'jstNull'});
   };
 
-  var _property = function(name, value, depth) {
+  var _property = function(name, value) {
     var escapedValue = _escape(JSON.stringify(name));
     var property = _element(escapedValue, {class: 'jstProperty'});
-    var propertyValue = _jsVal(value, depth);
-    return [
-      property + _colon(),
-      propertyValue,
-    ].join('');
+    var propertyValue = _jsVal(value);
+    return [property + _colon(), propertyValue].join('');
   };
 
   var _colon = function() {
@@ -150,14 +159,6 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
 
   var _close = function(sym, id) {
     return _element(sym, {id: 'opening_' + id + '_end', class: 'jstBracket'});
-  };
-
-  var _indent = function(depth) {
-    return _element(Array((depth * 2) + 1).join('&nbsp;'), {});
-  };
-
-  var _br = function() {
-    return '<br>';
   };
 
   var _nextUntil = function(elem, id) {
