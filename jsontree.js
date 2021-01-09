@@ -13,26 +13,36 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
 
   this.create = function(data, settings) {
     instances += 1;
-    return _jsVal(data);
+    return '<div class="jstTree">' + _jsVal(data) + '</div>';
   };
 
   this.click = function(elem) {
     var symbol = elem.innerHTML;
     if (symbol === '-') {
-      var id = elem.parentElement.previousElementSibling.id;
-      var siblings = _nextUntil(elem.parentElement, id + '_end');
+      var block = findNextWithClass(elem.parentElement, 'jstBracket');
+      var siblings = _nextUntil(block, block.id + '_end');
       _hide(elem.parentElement, siblings);
       elem.innerHTML = '+';
     } else {
-      var parent = elem.parentElement;
-      var block = parent.nextElementSibling;
-      var children = block.children;
+      var block = findNextWithClass(elem.parentElement, 'jstBracket');
+      var hiddenElements = findNextWithClass(elem.parentElement, 'jstHiddenBlock');
+      var children = hiddenElements.children;
       for (var i = children.length; i > 0; i--) {
         var child = children[i - 1];
-        parent.after(child);
+        block.after(child);
       }
-      block.remove();
+      hiddenElements.remove();
       elem.innerHTML = '-';
+    }
+  };
+
+  var findNextWithClass = function(element, clazz) {
+    var next = element.nextElementSibling;
+    while (true) {
+      if (next.className === clazz) {
+        return next;
+      }
+      next = next.nextElementSibling;
     }
   };
 
@@ -71,7 +81,12 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
     var elements = [];
     var keys = Object.keys(object);
     keys.forEach(function(key, index) {
-      var html = ['<li class="jstItem">', _property(key, object[key])];
+      var html = [];
+      html.push('<li class="jstItem">');
+      if (_canCollapse(object[key])) {
+        html.push(_collapseElem());
+      }
+      html.push(_property(key, object[key]));
       if (index !== keys.length - 1) {
         html.push(_comma());
       }
@@ -84,14 +99,33 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
 
   var _collapseElem = function() {
     var onClick = 'onclick="JSONTree.click(this); return false;';
-    var a = '<a href="#" class="jstCollapse" ' + onClick + ' ">-</a>';
-    return '<span>&nbsp;' + a + '&nbsp;</span>';
+    var a = '<a href="#" ' + onClick + '">-</a>';
+    return '<span class="jstCollapse">' + a + '</span>';
+  };
+
+  var _canCollapse = function(data) {
+    var type = typeof data;
+    switch (type) {
+      case 'boolean':
+        return false;
+      case 'number':
+        return false;
+      case 'string':
+        return false;
+      default:
+        if (data === null) {
+          return false;
+        } else if (data instanceof Array) {
+          return data.length > 0;
+        } else {
+          return Object.keys(data).length > 0;
+        }
+    }
   };
 
   var _collection = function(opening, data, closing) {
     return [
       opening,
-      _collapseElem(),
       '<ul class="jstList">',
       data,
       '</ul>',
