@@ -124,13 +124,17 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
   };
 
   var _collection = function(opening, data, closing) {
-    return [
-      opening,
-      '<ul class="jstList">',
-      data,
-      '</ul>',
-      closing,
-    ].join('');
+    if (data.length > 0) {
+      return [
+        opening,
+        '<ul class="jstList">',
+        data,
+        '</ul>',
+        closing,
+      ].join('');
+    } else {
+      return opening + closing;
+    }
   };
 
   var _jsArr = function(array) {

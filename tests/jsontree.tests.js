@@ -1,12 +1,12 @@
 QUnit.test("Build empty object", function (assert) {
     var result = JSONTree.create({});
-    var expected = "<div class=\"jstTree\"><span id=\"opening_1_0\" class=\"jstBracket\">{</span><ul class=\"jstList\"></ul><span id=\"opening_1_0_end\" class=\"jstBracket\">}</span></div>";
+    var expected = "<div class=\"jstTree\"><span id=\"opening_1_0\" class=\"jstBracket\">{</span><span id=\"opening_1_0_end\" class=\"jstBracket\">}</span></div>";
     assert.equal(result, expected, 'same content');
 });
 
 QUnit.test("Build empty array", function (assert) {
     var result = JSONTree.create([]);
-    var expected = "<div class=\"jstTree\"><span id=\"opening_2_1\" class=\"jstBracket\">[</span><ul class=\"jstList\"></ul><span id=\"opening_2_1_end\" class=\"jstBracket\">]</span></div>";
+    var expected = "<div class=\"jstTree\"><span id=\"opening_2_1\" class=\"jstBracket\">[</span><span id=\"opening_2_1_end\" class=\"jstBracket\">]</span></div>";
     assert.equal(result, expected, 'same content');
 });
 
