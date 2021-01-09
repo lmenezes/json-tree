@@ -19,7 +19,7 @@ The result of the previous example should render the following structure:
 
 The colors of the generated structure can be customised through the following CSS classes:
 
-- jstValue: Class applied to span element wrapping the whole structure
+- jstTree: Class applied to div element wrapping the whole structure
 
 - jstProperty: Class applied to property names
 
@@ -35,7 +35,9 @@ The colors of the generated structure can be customised through the following CS
 
 - jstColon: Class applied to colon separating property name from property value
 
-- jstCollapse: Class applied to the expand/collapse symbols
+- jstCollapse: Class applied to the collapse symbol
+
+- jstExpand: Class applied to the expand symbol
 
 - jstBracket: Class applied to brackets (both {} and [])
 
