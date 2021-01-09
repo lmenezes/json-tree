@@ -139,7 +139,11 @@ var JSONTree = (function() { // eslint-disable-line no-unused-vars
     var id = _id();
     var elements = [];
     array.forEach(function(element, index) {
-      var html = ['<li class="jstItem">', _jsVal(element)];
+      var html = ['<li class="jstItem">'];
+      if (_canCollapse(element)) {
+        html.push(_collapseElem());
+      }
+      html.push(_jsVal(element));
       if (index !== array.length - 1) {
         html.push(_comma());
       }
